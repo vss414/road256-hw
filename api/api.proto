@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package ozon.dev.mc2.api;
+option go_package = "gitlab.ozon.dev/vss414/hw-1/pkg/api;api";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service Admin {
+  rpc PlayerCreate(PlayerCreateRequest) returns (PlayerCreateResponse) {
+    option (google.api.http) = {
+      post: "/v1/player"
+      body: "*"
+    };
+  }
+  rpc PlayerAsyncCreate(PlayerCreateRequest) returns (google.protobuf.Empty) {}
+
+  rpc PlayerList(PlayerListRequest) returns (PlayerListResponse) {
+    option (google.api.http) = {
+      get: "/v1/players"
+    };
+  }
+
+  rpc PlayerPubsubList(PlayerListRequest) returns (PlayerListResponse) {}
+  rpc PlayerStreamList(PlayerStreamListRequest) returns (stream PlayerStreamListResponse) {}
+
+  rpc PlayerGet(PlayerGetRequest) returns (PlayerGetResponse) {
+    option (google.api.http) = {
+      get: "/v1/player/{id}"
+    };
+  }
+  rpc PlayerPubsubGet(PlayerGetRequest) returns (PlayerGetResponse) {}
+
+  rpc PlayerUpdate(PlayerUpdateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/player/{id}/update"
+      body: "*"
+    };
+  }
+  rpc PlayerAsyncUpdate(PlayerUpdateRequest) returns (google.protobuf.Empty) {}
+
+  rpc PlayerDelete(PlayerDeleteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/player/{id}/delete"
+    };
+  }
+  rpc PlayerAsyncDelete(PlayerDeleteRequest) returns (google.protobuf.Empty) {}
+}
+
+message PlayerCreateRequest {
+  string name    = 1;
+  string club    = 2;
+  uint64 games   = 3;
+  uint64 goals   = 4;
+  uint64 assists = 5;
+}
+message PlayerCreateResponse {
+  uint64 id      = 1;
+  string name    = 2;
+  string club    = 3;
+  uint64 games   = 4;
+  uint64 goals   = 5;
+  uint64 assists = 6;
+}
+
+message PlayerListResponse {
+  repeated Player players = 1;
+
+  message Player {
+    uint64 id      = 1;
+    string name    = 2;
+    string club    = 3;
+    uint64 games   = 4;
+    uint64 goals   = 5;
+    uint64 assists = 6;
+  }
+}
+
+enum Order {
+  ORDER_UNSPECIFIED = 0;
+  ORDER_ID          = 1;
+  ORDER_NAME        = 2;
+  ORDER_CLUB        = 3;
+  ORDER_GAMES       = 4;
+  ORDER_GOALS       = 5;
+  ORDER_ASSISTS     = 6;
+}
+enum Direction {
+  DIRECTION_UNSPECIFIED = 0;
+  DIRECTION_ASC         = 1;
+  DIRECTION_DESC        = 2;
+}
+message PlayerListRequest {
+  uint64 limit        = 1;
+  uint64 page         = 2;
+  Order order         = 3;
+  Direction direction = 4;
+}
+
+message PlayerStreamListRequest {
+  uint64 limit        = 1;
+  uint64 page         = 2;
+  Order order         = 3;
+  Direction direction = 4;
+}
+message PlayerStreamListResponse {
+  uint64 id      = 1;
+  string name    = 2;
+  string club    = 3;
+  uint64 games   = 4;
+  uint64 goals   = 5;
+  uint64 assists = 6;
+}
+
+message PlayerGetRequest {
+  uint64 id = 1;
+}
+message PlayerGetResponse {
+  uint64 id      = 1;
+  string name    = 2;
+  string club    = 3;
+  uint64 games   = 4;
+  uint64 goals   = 5;
+  uint64 assists = 6;
+}
+
+message PlayerUpdateRequest {
+  uint64 id      = 1;
+  string name    = 2;
+  string club    = 3;
+  uint64 games   = 4;
+  uint64 goals   = 5;
+  uint64 assists = 6;
+}
+
+message PlayerDeleteRequest {
+  uint64 id = 1;
+}

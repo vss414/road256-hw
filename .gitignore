@@ -1,0 +1,5 @@
+.idea
+bin/*
+internal/config/config.json
+postgresql/data/*
+logs/*
